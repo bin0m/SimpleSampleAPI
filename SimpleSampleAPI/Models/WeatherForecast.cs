@@ -1,6 +1,6 @@
 using System;
 
-namespace SimpleSampleAPI
+namespace SimpleSampleAPI.Models
 {
     public class WeatherForecast
     {
