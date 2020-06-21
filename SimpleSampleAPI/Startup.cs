@@ -44,6 +44,10 @@ namespace SimpleSampleAPI
                 endpoints.MapControllers();
             });
 
+            //app.UseSwagger(c =>
+            //{
+            //    c.SerializeAsV2 = true;
+            //});
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

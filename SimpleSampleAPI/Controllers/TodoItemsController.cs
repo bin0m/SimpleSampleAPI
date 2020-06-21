@@ -20,6 +20,7 @@ namespace SimpleSampleAPI.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
+        //[HttpPost]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
             return await _context.TodoItems
@@ -79,19 +80,27 @@ namespace SimpleSampleAPI.Controllers
         }
 
         // POST: api/TodoItems
-        [HttpPost]
-        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItemDto)
+        [HttpPost, HttpGet]
+        [Route("history/{priceCalculationType?}")]
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(
+            [FromForm]TodoItemDTO todoItemDto,
+            [FromForm] SymbolsRequiredRequestBoundModel symbolsRequiredRequestBound,
+            [FromRoute] string priceCalculationType = "None")
         {
+            var ss = symbolsRequiredRequestBound.Symbols;
+
             var todoItem = new TodoItem
             {
                 IsComplete = todoItemDto.IsComplete,
-                Name = todoItemDto.Name
+                Name = todoItemDto.Name + "_" + ss.FirstOrDefault(),
+                PriceCalculationType = priceCalculationType
             };
 
             await _context.TodoItems.AddAsync(todoItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDto.Id }, todoItemDto);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDto.Id }, todoItem);
         }
 
         // DELETE: api/TodoItems/5
